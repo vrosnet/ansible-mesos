@@ -1,0 +1,13 @@
+[Unit]
+Description=mesos-master
+After=syslog.target
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/mesos-init-wrapper master
+
+TimeoutSec=10
+
+[Install]
+WantedBy=multi-user.target
