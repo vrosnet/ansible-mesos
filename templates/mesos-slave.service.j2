@@ -1,12 +1,17 @@
 [Unit]
-Description=mesos-slave
-After=syslog.target
+Description=Mesos Slave
 After=network.target
+Wants=network.target
 
 [Service]
-Type=simple
+User=root
 ExecStart=/usr/bin/mesos-init-wrapper slave
-
+Restart=on-abort
+Restart=always
+RestartSec=20
+LimitNOFILE=16384
+CPUAccounting=true
+MemoryAccounting=true
 TimeoutSec=10
 
 [Install]

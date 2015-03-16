@@ -1,7 +1,9 @@
 ---
+- user: name=mesos
+
 # == Work Dir for replicated log
 - name: create work dir
-  file: path=/var/mesos state=directory
+  file: path=/var/mesos state=directory owner=mesos
 
 # == Remove default configs
 - name: Remove Default Mesos Configs
@@ -19,20 +21,20 @@
 # == Configure and recreate
 
 - name: Mesos default config file
-  template: src=conf-mesos.j2 dest=/etc/default/mesos
+  template: src=conf-mesos.j2 dest=/etc/default/mesos owner=mesos
 
 - name: Mesos Master config file
-  template: src=conf-mesos-master.j2 dest=/etc/default/mesos-master
+  template: src=conf-mesos-master.j2 dest=/etc/default/mesos-master owner=mesos
   when: mesos_install_mode == "master" or mesos_install_mode == "master-slave"
 
 - name: Mesos Slave config file
-  template: src=conf-mesos-slave.j2 dest=/etc/default/mesos-slave
+  template: src=conf-mesos-slave.j2 dest=/etc/default/mesos-slave owner=mesos
   when: mesos_install_mode == "slave" or mesos_install_mode == "master-slave"
 
-- file: path=/etc/mesos-slave/attributes state=directory
+- file: path=/etc/mesos-slave/attributes state=directory owner=mesos
 
 - name: Mesos Slave attributes
-  template: src=mesos-slave-attribute.j2 dest=/etc/mesos-slave/attributes/{{ item.key }} mode=0444
+  template: src=mesos-slave-attribute.j2 dest=/etc/mesos-slave/attributes/{{ item.key }} mode=0444 owner=mesos
   with_items: mesos_slave_attributes
   notify:
     - Restart mesos-slave
